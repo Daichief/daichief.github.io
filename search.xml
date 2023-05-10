@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Qt_vs_环境安装</title>
+    <url>/2023/05/10/Qt_vs_%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<h1 id="1-Qt安装"><a href="#1-Qt安装" class="headerlink" title="1.Qt安装"></a>1.Qt安装</h1><ul>
+<li>step 1 : 点击qt-opensource-windows-x86-5.9.3.exe安装包</li>
+</ul>
+<p><img src="/./Qt_vs_%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/%E5%9B%BE%E7%89%871.png"></p>
+<ul>
+<li>step 2 : 点击下一步。</li>
+</ul>
+<p><img src="/./Qt_vs_%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/%E5%9B%BE%E7%89%872.png"></p>
+]]></content>
+      <categories>
+        <category>Qt</category>
+      </categories>
+      <tags>
+        <tag>Qt</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hello World</title>
     <url>/2023/05/09/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
@@ -23,5 +42,8 @@
       <categories>
         <category>Hexo</category>
       </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
   </entry>
 </search>
