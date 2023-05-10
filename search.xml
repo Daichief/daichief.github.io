@@ -18,6 +18,7 @@
 <h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<p>博客搭建参考：<a href="https://www.cnblogs.com/huanhao/p/hexobase.html">https://www.cnblogs.com/huanhao/p/hexobase.html</a></p>
 ]]></content>
       <categories>
         <category>Hexo</category>
