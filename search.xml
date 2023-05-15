@@ -1,52 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Qt_vs_环境安装</title>
-    <url>/2023/05/10/Qt_vs_%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[<h1 id="1-Qt安装"><a href="#1-Qt安装" class="headerlink" title="1.Qt安装"></a>1.Qt安装</h1><ul>
-<li>step 1 : 点击qt-opensource-windows-x86-5.9.3.exe安装包</li>
-</ul>
-<p><img src="/2023/05/10/Qt_vs_%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/%E5%9B%BE%E7%89%871.png"></p>
-<ul>
-<li>step 2 : 点击下一步。</li>
-</ul>
-<p><img src="/2023/05/10/Qt_vs_%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/%E5%9B%BE%E7%89%872.png"></p>
-]]></content>
-      <categories>
-        <category>Qt</category>
-      </categories>
-      <tags>
-        <tag>Qt</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2023/05/09/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<span id="more"></span>
-
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-<p>博客搭建参考：<a href="https://www.cnblogs.com/huanhao/p/hexobase.html">https://www.cnblogs.com/huanhao/p/hexobase.html</a></p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>C++基础</title>
     <url>/2023/05/13/C++%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h2 id="1-C-初识"><a href="#1-C-初识" class="headerlink" title="1 C++初识"></a>1 C++初识</h2><h3 id="1-1-第一个C-程序"><a href="#1-1-第一个C-程序" class="headerlink" title="1.1  第一个C++程序"></a>1.1  第一个C++程序</h3><p>编写一个C++程序总共分为4个步骤</p>
@@ -1845,6 +1799,66 @@
       </categories>
       <tags>
         <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Qt_vs_环境安装</title>
+    <url>/2023/05/10/Qt_vs_%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<h1 id="1-Qt安装"><a href="#1-Qt安装" class="headerlink" title="1.Qt安装"></a>1.Qt安装</h1><ul>
+<li>step 1 : 点击qt-opensource-windows-x86-5.9.3.exe安装包</li>
+</ul>
+<p><img src="/2023/05/10/Qt_vs_%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/%E5%9B%BE%E7%89%871.png"></p>
+<ul>
+<li>step 2 : 点击下一步。</li>
+</ul>
+<p><img src="/2023/05/10/Qt_vs_%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/%E5%9B%BE%E7%89%872.png"></p>
+]]></content>
+      <categories>
+        <category>Qt</category>
+      </categories>
+      <tags>
+        <tag>Qt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2023/05/09/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<span id="more"></span>
+
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<p>博客搭建参考：<a href="https://www.cnblogs.com/huanhao/p/hexobase.html">https://www.cnblogs.com/huanhao/p/hexobase.html</a></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Qt窗口鼠标移动事件触发方式</title>
+    <url>/2023/05/15/Qt%E7%AA%97%E5%8F%A3%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%8A%A8%E4%BA%8B%E4%BB%B6%E8%A7%A6%E5%8F%91%E6%96%B9%E5%BC%8F/</url>
+    <content><![CDATA[<p>开启鼠标跟踪模式：</p>
+<p>1.没启用的情况下：对应部件只接收在鼠标移动同时至少一个鼠标按键按下时的移动事件。</p>
+<p>2.启动鼠标跟踪的情况下，任何鼠标移动事件都会被接收。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//构造函数中</span></span><br><span class="line"><span class="built_in">setMouseTracking</span>(<span class="literal">true</span>);</span><br><span class="line">ui-&gt;centralWidget-&gt;<span class="built_in">setMouseTracking</span>(<span class="literal">true</span>);    </span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>这两句代码一句都不能少，否则鼠标移动事件只有在鼠标键按下的同时移动鼠标才能触发鼠标移动事件</p>
+]]></content>
+      <tags>
+        <tag>Qt</tag>
       </tags>
   </entry>
   <entry>
