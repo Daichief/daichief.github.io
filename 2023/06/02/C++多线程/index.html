@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.svg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.svg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="进程和多线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++多线程">
+<meta property="og:url" content="http://example.com/2023/06/02/C++%E5%A4%9A%E7%BA%BF%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="进程和多线程">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-06-02T02:24:09.000Z">
+<meta property="article:modified_time" content="2023-06-02T12:43:14.107Z">
+<meta property="article:author" content="WanDai">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/06/02/C++%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>C++多线程 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/06/02/C++%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="WanDai">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++多线程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-06-02 10:24:09 / 修改时间：20:43:14" itemprop="dateCreated datePublished" datetime="2023-06-02T10:24:09+08:00">2023-06-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">进程和多线程</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1-线程简介"><a href="#1-线程简介" class="headerlink" title="1.线程简介"></a>1.线程简介</h3><ul>
+<li><p>基本概念：</p>
+<ul>
+<li>一个程序的多个执行线路我们称之为线程。它也被称为轻量级别的进程。它是程序执行的最小单元。多个线程共享同一个进程的地址空间，参与系统的统一的调度。</li>
+<li>在同一个进程中创建的线程共享进程的地址空间。</li>
+</ul>
+</li>
+<li><p>共享资源和私有资源</p>
+<ul>
+<li><p>一个进程中的多个线程共享以下资源</p>
+<p>可执行命令、静态数据、全局变量、用户的ID、进程中打开的文件句柄</p>
+</li>
+<li><p>每个线程的私有资源</p>
+<p>线程ID、系统相关的数据、局部变量、私有栈</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-创建线程"><a href="#2-创建线程" class="headerlink" title="2.创建线程"></a>2.创建线程</h3><ul>
+<li><p>头文件：<code>#include &lt;thread&gt;</code> </p>
+</li>
+<li><p>线程类：<code>using namespace std::thread</code></p>
+</li>
+<li><p>默认构造函数：</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">thread</span>() <span class="keyword">noexcept</span></span><br></pre></td></tr></table></figure>
+
+<p>构造一个线程对象，不执行任何任务(不会启动子线程)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt; <span class="keyword">class</span> <span class="title class_">Function</span>, <span class="keyword">class</span>... Args &gt;<span class="function"><span class="keyword">explicit</span> <span class="title">thread</span><span class="params">(Function&amp;&amp; fx, Args&amp;&amp;... args )</span></span>;</span><br><span class="line"><span class="comment">//示例</span></span><br><span class="line"><span class="built_in">thread</span>( thread_exec, <span class="type">int</span> num, string str);</span><br></pre></td></tr></table></figure>
+
+<p>创建线程对象，在线程中执行任务函数fx中的代码，args是要传递给任务函数fx的参数。任务函数fx可以是普通函数、类的非静态成员函数、类的静态成员函数、lambda函数、仿函数。</p>
+<h3 id="3-线程资源回收"><a href="#3-线程资源回收" class="headerlink" title="3.线程资源回收"></a>3.线程资源回收</h3><ul>
+<li><p>说明：虽然同一个进程的多个线程共享进程的栈空间，但是，每个子线程在这个栈中拥有自己私有的栈空间。所以，线程结束时需要回收资源。</p>
+</li>
+<li><p>回收子线程的资源的两种方法：</p>
+<p>1.在主程序中，调用join()成员函数等待子线程退出，回收它的资源。如果子线程已退出，join()函数立即返回，否则会阻塞等待，直到子线程退出。 (结合式属性—阻塞回收)。</p>
+<p>2.在主程序中，调用detach()成员函数分离子线程，子线程退出时，系统将自动回收资源。分离后的子线程不可join()。 （分离式属性，系统自动回收）</p>
+</li>
+</ul>
+<h3 id="4-相关函数"><a href="#4-相关函数" class="headerlink" title="4.相关函数"></a>4.相关函数</h3><ul>
+<li><p>介绍：C++11提供了命名空间this_thread类来表示<strong>当前线程</strong>，该命名空间中有一些常用函数：get_id()、swap()。</p>
+</li>
+<li><p>thread类函数说明</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">thread::id <span class="title">get_id</span><span class="params">()</span> <span class="keyword">noexcept</span></span>;</span><br><span class="line"><span class="comment">//功能：该函数用于获取线程ID，thread类也有同名的成员函数。</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(std::thread&amp; other)</span></span>;    </span><br><span class="line"><span class="comment">//功能：交换两个线程对象  </span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>this_threa类设置当前线程休眠</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">Rep</span>, <span class="keyword">class</span> <span class="title class_">Period</span>&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">this_thread::sleep_for</span> <span class="params">(<span class="type">const</span> chrono::duration&lt;Rep,Period&gt;&amp; rel_time)</span></span>;</span><br><span class="line"><span class="comment">//功能：该函数让线程休眠一段时间</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//示例</span></span><br><span class="line"><span class="built_in">sleep_for</span>(chrono::<span class="built_in">seconds</span>(<span class="number">1000</span>));</span><br><span class="line"><span class="built_in">sleep_for</span>(chrono::<span class="built_in">minutes</span>(<span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-互斥锁"><a href="#4-互斥锁" class="headerlink" title="4.互斥锁"></a>4.互斥锁</h3><p>头文件：<code>#include </code></p>
+<blockquote>
+<p> <strong>C++11提供了四种互斥锁：</strong></p>
+</blockquote>
+<ul>
+<li>mutex ：互斥锁</li>
+<li>timed_mutex : 带超时机制的互斥锁</li>
+<li>recursive_mutex：递归互斥锁。</li>
+<li>recursive_timed_mutex：带超时机制的递归互斥锁。</li>
+<li>lock_guard ： 模板类，简化的互斥锁，使用更安全</li>
+</ul>
+<blockquote>
+<p> <strong>加锁和解锁</strong></p>
+</blockquote>
+<p>1.加锁lock():</p>
+<p>互斥锁有锁定和未锁定两种状态。如果互斥锁是未锁定状态，调用lock()成员函数的线程会得到互斥锁的所有权，并将其上锁。如果互斥锁是锁定状态，调用lock()成员函数的线程就会阻塞等待，直到互斥锁变成未锁定状态。</p>
+<p>2.解锁unlock()</p>
+<p>只有持有锁的线程才能解锁。</p>
+<p>3.尝试加锁try_lock()</p>
+<p>如果互斥锁是未锁定状态，则加锁成功，函数返回true。如果互斥锁是锁定状态，则加锁失败，函数立即返回false。（线程不会阻塞等待）</p>
+<blockquote>
+<p> recursive_mutex类</p>
+</blockquote>
+<p>1.简介：</p>
+<p>recursive_mutex类中使用的独占递归互斥锁，允许同一线程多次获得互斥锁，可用于保护共享数据不被多个线程同时访问。可以解决同一线程多次加锁造成的死锁问题。（尽量少用）</p>
+<p>2.原理：</p>
+<p>内部采用了类似引用计数的原理，它会自动判断是不是同一个线程。若是同一个线程持有该锁，调用lock()后，让引用计数 + 1，之后unlock()会让引用计数-1，直到减少到0，才会真正的解锁</p>
+<blockquote>
+<p>Lock_guard类</p>
+</blockquote>
+<p>1.简介：lock_guard是模板类，可以简化互斥锁的使用，也更安全。（推荐使用)</p>
+<p>2.定义</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">Mutex</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">lock_guard</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">lock_guard</span><span class="params">(Mutex&amp; mtx)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>3.lock_guard在构造函数中加锁，在析构函数中解锁。可避免程序员忘记解锁的情况。</p>
+<h3 id="4-条件变量"><a href="#4-条件变量" class="headerlink" title="4.条件变量"></a>4.条件变量</h3><ul>
+<li>简介：</li>
+</ul>
+<p>条件变量是一种线程同步机制。当条件不满足时，相关线程被一直阻塞，直到某种条件出现，这些线程才会被唤醒。通过条件变量可以让线程按照用户预先定好的先后次序来进行操作。</p>
+<ul>
+<li><p>C++11的条件变量提供了两个类</p>
+<ul>
+<li>condition_variable：只支持与普通mutex搭配，效率更高。</li>
+<li>condition_variable_any：是一种通用的条件变量，可以与任意mutex搭配（包括用户自定义的锁类型）。</li>
+</ul>
+</li>
+<li><p>条件变量使用过程</p>
+<ul>
+<li>条件变量使用过程</li>
+<li>循环检查某个条件，如果条件不满足则阻塞直到条件满足；如果条件满足则向下执行；</li>
+<li>某个线程满足条件执行完之后调用notify_one或notify_all唤醒一个或者所有等待线程。</li>
+</ul>
+</li>
+<li><p>条件变量提供了两类操作：wait和notify。这两类操作构成了多线程同步的基础。</p>
+</li>
+<li><p>condition_variable常用函数</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>常用函数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>condition_variable()</td>
+<td>默认构造函数。</td>
+</tr>
+<tr>
+<td>condition_variable(const condition_variable &amp;)&#x3D;delete</td>
+<td>禁止拷贝</td>
+</tr>
+<tr>
+<td>condition_variable&amp; condition_variable::operator&#x3D;(const condition_variable &amp;)&#x3D;delete</td>
+<td>禁止赋值</td>
+</tr>
+<tr>
+<td>notify_one()</td>
+<td>通知一个等待的线程，若是当前等待的线程有多个，则唤醒的线程不确定。</td>
+</tr>
+<tr>
+<td>notify_all()</td>
+<td>通知全部等待的线程</td>
+</tr>
+<tr>
+<td>wait(<strong>unique_lock<mutex> lock</mutex></strong>)</td>
+<td>阻塞当前线程，直到通知到达</td>
+</tr>
+<tr>
+<td>wait(unique_lock<mutex> lock,Pred pred)</mutex></td>
+<td>循环的阻塞当前线程，直到通知到达且条件满足。pred为等待的条件。</td>
+</tr>
+</tbody></table>
+<h3 id="5-消费者生产者和线程池"><a href="#5-消费者生产者和线程池" class="headerlink" title="5.消费者生产者和线程池"></a>5.消费者生产者和线程池</h3><ul>
+<li>main函数</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;boundedblockingqueue.cpp&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;threadpool.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">producer</span><span class="params">(BoundedBlockingQueue&lt;T&gt;&amp; queue, T value)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    queue.<span class="built_in">enqueue</span>(value);</span><br><span class="line">    std::cout &lt;&lt; std::this_thread::<span class="built_in">get_id</span>()&lt;&lt;<span class="string">&quot;线程生产了&quot;</span> &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">consumer</span><span class="params">(BoundedBlockingQueue&lt;T&gt;&amp; queue)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> temp = queue.<span class="built_in">dequeue</span>();</span><br><span class="line">    std::cout &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt;<span class="string">&quot;线程消费了&quot;</span> &lt;&lt; temp &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function">BoundedBlockingQueue&lt;<span class="type">int</span>&gt; <span class="title">queue</span><span class="params">(<span class="number">5</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">constexpr</span> <span class="type">int</span> numElementsPerThread = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">ThreadPool <span class="title">threadPool</span><span class="params">(<span class="number">5</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 添加生产者任务到线程池</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">9</span>; ++i) </span><br><span class="line">    &#123;</span><br><span class="line">        threadPool.<span class="built_in">enqueue</span>([&amp;queue, i] &#123; <span class="built_in">producer</span>(queue,i); &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 添加消费者任务到线程池</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; ++i) </span><br><span class="line">    &#123;</span><br><span class="line">        threadPool.<span class="built_in">enqueue</span>([&amp;queue] &#123; <span class="built_in">consumer</span>(queue); &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 等待线程池中所有任务执行完成</span></span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>消费者和生产者</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//头文件</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __BOUNDEDBLOCKINGQUEUE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __BOUNDEDBLOCKINGQUEUE_H__</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;condition_variable&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BoundedBlockingQueue</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">BoundedBlockingQueue</span><span class="params">(<span class="type">int</span> capacity)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">enqueue</span><span class="params">(T element)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">dequeue</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">size</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> m_capacity;                       </span><br><span class="line">    std::queue&lt;T&gt; m_queue;              </span><br><span class="line">    <span class="keyword">mutable</span> std::mutex m_mutex;           </span><br><span class="line">    std::condition_variable m_notFull;    <span class="comment">// 当队列非满时通知的条件变量</span></span><br><span class="line">    std::condition_variable m_notEmpty;   <span class="comment">// 当队列非空时通知的条件变量</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// __BOUNDEDBLOCKINGQUEUE_H__</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//源文件</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;boundedblockingqueue.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">BoundedBlockingQueue&lt;T&gt;::<span class="built_in">BoundedBlockingQueue</span>(<span class="type">int</span> capacity) : <span class="built_in">m_capacity</span>(capacity) </span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="type">void</span> BoundedBlockingQueue&lt;T&gt;::<span class="built_in">enqueue</span>(T element) </span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(m_mutex)</span></span>;</span><br><span class="line">    <span class="comment">//但任务队列满，阻塞进程</span></span><br><span class="line">    m_notFull.<span class="built_in">wait</span>(lock, [<span class="keyword">this</span>]() &#123; <span class="keyword">return</span> m_queue.<span class="built_in">size</span>() &lt; m_capacity; &#125;);</span><br><span class="line">    m_queue.<span class="built_in">push</span>(element);</span><br><span class="line">    m_notEmpty.<span class="built_in">notify_one</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="type">int</span> BoundedBlockingQueue&lt;T&gt;::<span class="built_in">dequeue</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(m_mutex)</span></span>;</span><br><span class="line">    <span class="comment">//当任务队列为空，阻塞进程</span></span><br><span class="line">    m_notEmpty.<span class="built_in">wait</span>(lock, [<span class="keyword">this</span>]() &#123; <span class="keyword">return</span> !m_queue.<span class="built_in">empty</span>(); &#125;);</span><br><span class="line">    T element = m_queue.<span class="built_in">front</span>();</span><br><span class="line">    m_queue.<span class="built_in">pop</span>();</span><br><span class="line">    m_notFull.<span class="built_in">notify_one</span>();</span><br><span class="line">    <span class="keyword">return</span> element;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="type">int</span> BoundedBlockingQueue&lt;T&gt;::<span class="built_in">size</span>() <span class="type">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(m_mutex)</span></span>;</span><br><span class="line">    <span class="keyword">return</span> m_queue.<span class="built_in">size</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>线程池</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//头文件</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __THREADPOOL_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __THREADPOOL_H__</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;condition_variable&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ThreadPool</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">ThreadPool</span><span class="params">(<span class="type">int</span> numThreads)</span></span>;</span><br><span class="line"></span><br><span class="line">    ~<span class="built_in">ThreadPool</span>();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">enqueue</span><span class="params">(<span class="type">const</span> std::function&lt;<span class="type">void</span>()&gt;&amp; task)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">worker</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    std::vector&lt;std::thread&gt; m_workers;         <span class="comment">//线程池</span></span><br><span class="line"></span><br><span class="line">    std::queue&lt;std::function&lt;<span class="type">void</span>()&gt;&gt; m_tasks;  <span class="comment">//任务队列</span></span><br><span class="line"></span><br><span class="line">    std::mutex m_mutex;                         <span class="comment">//互斥锁</span></span><br><span class="line"></span><br><span class="line">    std::condition_variable m_condition;        <span class="comment">//信号量</span></span><br><span class="line"> </span><br><span class="line">    <span class="type">bool</span> m_stop;                                <span class="comment">//线程池是否停止  </span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// !__THREADPOOL_H__</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//源文件</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;threadpool.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//创建线程</span></span><br><span class="line">ThreadPool::<span class="built_in">ThreadPool</span>(<span class="type">int</span> numThreads):<span class="built_in">m_stop</span>(<span class="literal">false</span>) </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; numThreads; ++i) </span><br><span class="line">    &#123;</span><br><span class="line">        m_workers.<span class="built_in">emplace_back</span>([<span class="keyword">this</span>] &#123; <span class="keyword">this</span>-&gt;<span class="built_in">worker</span>(); &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ThreadPool::~<span class="built_in">ThreadPool</span>() </span><br><span class="line">&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(m_mutex)</span></span>;</span><br><span class="line">        m_stop = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    m_condition.<span class="built_in">notify_all</span>(); <span class="comment">//唤醒所有线程，方便退出</span></span><br><span class="line">    <span class="comment">//等待所有线程完成任务</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span>&amp; worker : m_workers) </span><br><span class="line">    &#123;</span><br><span class="line">        worker.<span class="built_in">join</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ThreadPool::enqueue</span><span class="params">(<span class="type">const</span> std::function&lt;<span class="type">void</span>()&gt;&amp; task)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(m_mutex)</span></span>;</span><br><span class="line">        m_tasks.<span class="built_in">push</span>(task);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//唤醒一个线程</span></span><br><span class="line">    m_condition.<span class="built_in">notify_one</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//启动线程</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ThreadPool::worker</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        std::function&lt;<span class="type">void</span>()&gt; task;</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(m_mutex)</span></span>;</span><br><span class="line">            m_condition.<span class="built_in">wait</span>(lock, [<span class="keyword">this</span>] &#123; <span class="keyword">return</span> <span class="keyword">this</span>-&gt;m_stop || !<span class="keyword">this</span>-&gt;m_tasks.<span class="built_in">empty</span>(); &#125;);</span><br><span class="line">            <span class="comment">//线程池停止并且任务为空，退出</span></span><br><span class="line">            <span class="keyword">if</span> (m_stop &amp;&amp; m_tasks.<span class="built_in">empty</span>()) </span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            task = m_tasks.<span class="built_in">front</span>();</span><br><span class="line">            m_tasks.<span class="built_in">pop</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//执行任务</span></span><br><span class="line">        <span class="built_in">task</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/05/27/Git%E4%BD%BF%E7%94%A8/" rel="prev" title="Git使用">
+      <i class="fa fa-chevron-left"></i> Git使用
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%BA%BF%E7%A8%8B%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">1.线程简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">2.创建线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%BA%BF%E7%A8%8B%E8%B5%84%E6%BA%90%E5%9B%9E%E6%94%B6"><span class="nav-number">3.</span> <span class="nav-text">3.线程资源回收</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">4.相关函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%BA%92%E6%96%A5%E9%94%81"><span class="nav-number">5.</span> <span class="nav-text">4.互斥锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F"><span class="nav-number">6.</span> <span class="nav-text">4.条件变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%B6%88%E8%B4%B9%E8%80%85%E7%94%9F%E4%BA%A7%E8%80%85%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="nav-number">7.</span> <span class="nav-text">5.消费者生产者和线程池</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">WanDai</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Daichief" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Daichief" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/2415709268@qq.com" title="E-Mail → 2415709268@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WanDai</span>
+</div>
+
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
