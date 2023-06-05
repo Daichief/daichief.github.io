@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.svg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.svg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="MVD框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Qt Model&#x2F;View框架">
+<meta property="og:url" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="MVD框架">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/1.png">
+<meta property="og:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/2.png">
+<meta property="og:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/3.png">
+<meta property="og:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/4.png">
+<meta property="og:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/5.png">
+<meta property="og:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/6.png">
+<meta property="og:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/7.png">
+<meta property="og:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/8.png">
+<meta property="og:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/9.png">
+<meta property="og:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/10.png">
+<meta property="og:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/11.png">
+<meta property="og:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/12.png">
+<meta property="og:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/13.png">
+<meta property="og:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/14.png">
+<meta property="article:published_time" content="2023-06-03T02:11:00.000Z">
+<meta property="article:modified_time" content="2023-06-05T12:16:34.944Z">
+<meta property="article:author" content="WanDai">
+<meta property="article:tag" content="Qt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/1.png">
+
+<link rel="canonical" href="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Qt Model/View框架 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="WanDai">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Qt Model/View框架
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-06-03 10:11:00" itemprop="dateCreated datePublished" datetime="2023-06-03T10:11:00+08:00">2023-06-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-06-05 20:16:34" itemprop="dateModified" datetime="2023-06-05T20:16:34+08:00">2023-06-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Qt/" itemprop="url" rel="index"><span itemprop="name">Qt</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">MVD框架</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1-MVC框架"><a href="#1-MVC框架" class="headerlink" title="1.MVC框架"></a>1.MVC框架</h3><ul>
+<li>模型-视图-控制(MVC) 是源自 Smalltalk 的一种设计模式,在构建用户界面时经常使用</li>
+<li>MVC 框架的目的是用于将业务逻辑、数据、界面显示分离的方法，在修改界面时不会影响业务逻辑</li>
+<li>MVC  框架由三个对象组成:<ul>
+<li>Model (模型) : 用于封装与应用程序业务逻辑相关的数据以及对数据的处理方法。Model 有对数据直接访问的权力</li>
+<li>View (视图) ： 用于数据可视化</li>
+<li>Controller (控制器 ） : 控制器作用于模型和视图上。它控制数据流向模型对象，并在数据变化时更新视图。它使视图与模型分离开。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/1.png"></p>
+<h3 id="2-Qt-Model-x2F-View框架"><a href="#2-Qt-Model-x2F-View框架" class="headerlink" title="2.Qt Model&#x2F;View框架"></a>2.Qt Model&#x2F;View框架</h3><ul>
+<li>Qt 中的 Model&#x2F;View 就是基于 MVC 设计思想设计,只不过 Controller 变成了 Delegate</li>
+<li>MVD  框架主要包含两个部分 <ul>
+<li>Model : 模型,负责存储和管理数据</li>
+<li>View : 视图,负责显示数据</li>
+<li>Delegate : 委托,负责渲染和编辑</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/2.png"></p>
+<h3 id="3-视图组件（View）"><a href="#3-视图组件（View）" class="headerlink" title="3.视图组件（View）"></a>3.视图组件（View）</h3><ul>
+<li><p>用于显示数据模型的数据界面的组件,Qt 提供的组件如下:</p>
+<ul>
+<li><p>QListView：用于显示单列的列表数据，适用于一维数据的操作。</p>
+</li>
+<li><p>QTreeView：用于显示树状结构数据，适用于树状结构数据的操作。</p>
+</li>
+<li><p>QTableView：用于显示表格状数据，适用于二维表格型数据的操作。</p>
+</li>
+<li><p>QColumnView：用于多个QListView显示树状层次结构，树状结构的一层用一个QListView显示。</p>
+</li>
+<li><p>QHeaderView：提供行表头或列表头的视图组件，如QTableView的行表头和列表头。</p>
+</li>
+<li><p>可以支持 Qt Model&#x2F;View 框架的组件都是继承 QAbstractItemView,具体的继承关系如下:</p>
+</li>
+</ul>
+</li>
+<li><p>可以支持 Qt Model&#x2F;View 框架的组件都是继承 QAbstractItemView,具体的继承关系如下:</p>
+</li>
+</ul>
+<p><img src="/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/3.png"></p>
+<h3 id="4-模型（Model）"><a href="#4-模型（Model）" class="headerlink" title="4.模型（Model）"></a>4.模型（Model）</h3><ul>
+<li>模型负责对数据进行管理,实现通用接口,为 delegate，view类对象访问和修改数据提供支持。</li>
+<li>数据模型的基本形式是使用行和列定义的表格数据,每个数据项(Item）按照其行号和列号定位</li>
+</ul>
+<p><img src="/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/4.png"></p>
+<ul>
+<li>所有基于项数据(item data) 的数据模型 (Model) 都是基于 QAbstractItemModel ,具体的继承关系如下:</li>
+</ul>
+<p><img src="/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/5.png"></p>
+<ul>
+<li>抽象类一般不能直接使用，需要由子类继承来实现一些纯虚函数,Qt 提供了一些模型类用于项数据处理</li>
+</ul>
+<p><img src="/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/6.png"></p>
+<h3 id="5-模型索引（QModelIndex）"><a href="#5-模型索引（QModelIndex）" class="headerlink" title="5.模型索引（QModelIndex）"></a>5.模型索引（QModelIndex）</h3><ul>
+<li><p>为了保证数据的表示与数据存取方式隔离，数据模型中引入了模型索引的概念。</p>
+</li>
+<li><p>通过数据模型存取的每个数据都有一个模型索引，视图组件和代理都通过模型索引来获取数据</p>
+</li>
+<li><p>QModeIndex 类表示模型索引的类,模型索引提供数据存取的一个临时指针,用于通过数据模型提取或修改数据</p>
+</li>
+<li><p>获取 List 或者 Table 的索引方式如下:</p>
+</li>
+</ul>
+<p><img src="/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/7.png"></p>
+<p><img src="/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/8.png"></p>
+<h3 id="6-标准数据项模型"><a href="#6-标准数据项模型" class="headerlink" title="6.标准数据项模型"></a>6.标准数据项模型</h3><ul>
+<li>QStandardItemModel 是标准的以项 (item) 数据为单位的基于M&#x2F;V模型的一种标准数据管理方式</li>
+<li>一个数据模型中一个数据就是一个数据项(Item)</li>
+<li>在 Qt 中使用 QStandardItem 来描述标准数据项</li>
+</ul>
+<h3 id="7-自定义Model"><a href="#7-自定义Model" class="headerlink" title="7.自定义Model"></a>7.自定义Model</h3><ul>
+<li><p>QStandardItemModel 主要针对的数据源为 字符串,相对来说比较有局限性，在面向其他数据形式时，可以使用自定义模型</p>
+</li>
+<li><p>自定义模型根据需要，选择合适的父类，如果是 自定义表格模型，可直接继承于 QAbstractTableModel</p>
+</li>
+</ul>
+<p><img src="/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/9.png"></p>
+<ul>
+<li>在实现自定义的表格模型中,需要重写相关接口,下面列举了部分实现接口</li>
+</ul>
+<p><img src="/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/10.png"></p>
+<ul>
+<li>在模型-视图中每个数据项包含一个或多个由角色（Role）标识的数据值。</li>
+<li>角色是一个整数值，用于标识数据项中的不同数据。</li>
+<li>Qt中提供了多种预定义的角色，如Qt::DisplayRole、Qt::EditRole、Qt::ToolTipRole等。具体如下:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Qt::DisplayRole</td>
+<td>显示数据的角色，显示在视图中的单元格中</td>
+</tr>
+<tr>
+<td>Qt::EditRole</td>
+<td>设置数据项的编辑数据，可以方便地对数据进行编辑和更新</td>
+</tr>
+<tr>
+<td>Qt::ToolTipRole</td>
+<td>提供提示信息的角色</td>
+</tr>
+<tr>
+<td>Qt::CheckStateRole</td>
+<td>复选框状态的角色，用于表示复选框的状态</td>
+</tr>
+<tr>
+<td>Qt::UserRole</td>
+<td>用户自定义角色，用于存储用户自定义的数据</td>
+</tr>
+</tbody></table>
+<ul>
+<li>角色的值可以使用Qt::ItemDataRole枚举类型进行表示。</li>
+</ul>
+<p><img src="/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/11.png"></p>
+<ul>
+<li>代码示例框架</li>
+</ul>
+<p><img src="/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/12.png"></p>
+<blockquote>
+<p>自定义表格模型类</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __K_TABLEMODEL_H_</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __K_TABLEMODEL_H_</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QAbstractTableModel&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;kcontact.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 自定义表格Model</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">KTableModel</span> : <span class="keyword">public</span> QAbstractTableModel</span><br><span class="line">&#123;</span><br><span class="line">	Q_OBJECT</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">KTableModel</span>(<span class="type">const</span> QVector&lt;KContact *&gt; &amp;contacts,QObject *parent = <span class="literal">nullptr</span>);</span><br><span class="line">	~<span class="built_in">KTableModel</span>();</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> QVariant</span></span><br><span class="line"><span class="function">		<span class="title">headerData</span><span class="params">(<span class="type">int</span> section, Qt::Orientation orientation, <span class="type">int</span> role = Qt::DisplayRole)</span> <span class="type">const</span> <span class="keyword">override</span></span>; <span class="comment">// 返回表头数据</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">int</span></span></span><br><span class="line"><span class="function">		<span class="title">rowCount</span><span class="params">(<span class="type">const</span> QModelIndex&amp; parent = QModelIndex())</span> <span class="type">const</span> <span class="keyword">override</span></span>; <span class="comment">// 返回模型的行数</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">int</span></span></span><br><span class="line"><span class="function">		<span class="title">columnCount</span><span class="params">(<span class="type">const</span> QModelIndex&amp; parent = QModelIndex())</span> <span class="type">const</span> <span class="keyword">override</span></span>; <span class="comment">// 返回模型的列数</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> QVariant</span></span><br><span class="line"><span class="function">		<span class="title">data</span><span class="params">(<span class="type">const</span> QModelIndex&amp; index, <span class="type">int</span> role = Qt::DisplayRole)</span> <span class="type">const</span> <span class="keyword">override</span></span>; <span class="comment">// 返回模型的数据,根据模型索引与数据角色</span></span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	QStringList m_headerData; <span class="comment">// 表头数据</span></span><br><span class="line">	QVector&lt;KContact *&gt; m_contacts;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;ktablemodel.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">KTableModel::<span class="built_in">KTableModel</span>(<span class="type">const</span> QVector&lt;KContact *&gt; &amp;contacts,QObject *parent)</span><br><span class="line">	: <span class="built_in">QAbstractTableModel</span>(parent)</span><br><span class="line">	, <span class="built_in">m_contacts</span>(contacts)</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">KTableModel::~<span class="built_in">KTableModel</span>()</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">QVariant <span class="title">KTableModel::headerData</span><span class="params">(<span class="type">int</span> section, Qt::Orientation orientation, <span class="type">int</span> role)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (role != Qt::DisplayRole)</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">QVariant</span>();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (orientation == Qt::Horizontal) <span class="comment">// 水平表头</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">switch</span> (section) </span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">case</span> <span class="number">0</span> :</span><br><span class="line">				<span class="keyword">return</span> <span class="built_in">QString</span>(<span class="string">&quot;Name&quot;</span>);</span><br><span class="line">			<span class="keyword">case</span> <span class="number">1</span> :</span><br><span class="line">				<span class="keyword">return</span> <span class="built_in">QString</span>(<span class="string">&quot;Address&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">QVariant</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//返回行数</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">KTableModel::rowCount</span><span class="params">(<span class="type">const</span> QModelIndex&amp; parent)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> parent.<span class="built_in">isValid</span>() ? <span class="number">0</span> : m_contacts.<span class="built_in">size</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//返回列数</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">KTableModel::columnCount</span><span class="params">(<span class="type">const</span> QModelIndex&amp; parent)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> parent.<span class="built_in">isValid</span>() ? <span class="number">0</span> : <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//返回数据</span></span><br><span class="line"><span class="function">QVariant <span class="title">KTableModel::data</span><span class="params">(<span class="type">const</span> QModelIndex&amp; index, <span class="type">int</span> role)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (!index.<span class="built_in">isValid</span>())</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">QVariant</span>();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (index.<span class="built_in">row</span>() &gt;= m_contacts.<span class="built_in">size</span>() || index.<span class="built_in">row</span>() &lt; <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">QVariant</span>();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (role == Qt::DisplayRole) </span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">const</span> <span class="keyword">auto</span>&amp; contact = m_contacts.<span class="built_in">at</span>(index.<span class="built_in">row</span>());</span><br><span class="line"></span><br><span class="line">		<span class="keyword">switch</span> (index.<span class="built_in">column</span>()) </span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">case</span> <span class="number">0</span> : </span><br><span class="line">				<span class="keyword">return</span> contact-&gt;<span class="built_in">getName</span>();</span><br><span class="line">			<span class="keyword">case</span> <span class="number">1</span> :</span><br><span class="line">				<span class="keyword">return</span> contact-&gt;<span class="built_in">getAddress</span>();</span><br><span class="line">			<span class="keyword">default</span>:</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">QVariant</span>(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>主窗口类</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __K_MAINWINDOW_H_</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __K_MAINWINDOW_H_</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QtWidgets/QWidget&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;ktablemodel.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;ui_kmainwindow.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">KMainWindow</span> : <span class="keyword">public</span> QWidget</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">KMainWindow</span>(QWidget *parent = Q_NULLPTR);</span><br><span class="line">    ~<span class="built_in">KMainWindow</span>();</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">initTableViewWithModel</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">initContactVector</span><span class="params">()</span></span>;<span class="comment">//初始化联系人容器</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Ui::KMainWindowClass ui;</span><br><span class="line">    KTableModel *m_pTableModel;</span><br><span class="line">    QVector&lt;KContact*&gt;m_contactVector;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;kmainwindow.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">KMainWindow::<span class="built_in">KMainWindow</span>(QWidget *parent)</span><br><span class="line">    : <span class="built_in">QWidget</span>(parent)</span><br><span class="line">    , <span class="built_in">m_pTableModel</span>(<span class="literal">nullptr</span>)</span><br><span class="line">&#123;</span><br><span class="line">    ui.<span class="built_in">setupUi</span>(<span class="keyword">this</span>);</span><br><span class="line">    <span class="built_in">initContactVector</span>();</span><br><span class="line">    <span class="built_in">initTableViewWithModel</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">KMainWindow::~<span class="built_in">KMainWindow</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">qDeleteAll</span>(m_contactVector.<span class="built_in">begin</span>(), m_contactVector.<span class="built_in">end</span>());<span class="comment">//释放QVector 元素的空间</span></span><br><span class="line">    m_contactVector.<span class="built_in">clear</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">KMainWindow::initTableViewWithModel</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m_pTableModel = <span class="keyword">new</span> <span class="built_in">KTableModel</span>(m_contactVector, <span class="keyword">this</span>);</span><br><span class="line">    ui.tableView-&gt;<span class="built_in">setModel</span>(m_pTableModel);</span><br><span class="line">    ui.tableView-&gt;<span class="built_in">horizontalHeader</span>()-&gt;<span class="built_in">setSectionResizeMode</span>(QHeaderView::Stretch);<span class="comment">// 设置自适应</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">KMainWindow::initContactVector</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m_contactVector.<span class="built_in">push_back</span>(<span class="keyword">new</span> <span class="built_in">KContact</span>(<span class="literal">nullptr</span>, <span class="string">&quot;xiaoming&quot;</span>, <span class="string">&quot;wuhan&quot;</span>));</span><br><span class="line">    m_contactVector.<span class="built_in">push_back</span>(<span class="keyword">new</span> <span class="built_in">KContact</span>(<span class="literal">nullptr</span>, <span class="string">&quot;xiaohua&quot;</span>, <span class="string">&quot;zhuhai&quot;</span>));</span><br><span class="line">    m_contactVector.<span class="built_in">push_back</span>(<span class="keyword">new</span> <span class="built_in">KContact</span>(<span class="literal">nullptr</span>, <span class="string">&quot;xiaoxiao&quot;</span>, <span class="string">&quot;guangzhou&quot;</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="8-Qt-自定义Delegate"><a href="#8-Qt-自定义Delegate" class="headerlink" title="8.Qt 自定义Delegate"></a>8.Qt 自定义Delegate</h3><ul>
+<li><p>支持 mvd 模式的组件，如 QTableView,QTreeView 都是支持默认委托，用于基本的渲染,如显示文本、数字和图像基本数据类型 </p>
+</li>
+<li><p>默认委托一般使用的 QStyledItemDelegate ,当默认委托无法满足业务需求时,则需要进行自定义</p>
+</li>
+<li><p>QStyledItemDelegate 的父类 是 <strong>QAbstractItemDelegate</strong></p>
+</li>
+<li><p>自定义委托 一般都是继承 QStyledItemDelegate ,需要重写相关接口</p>
+</li>
+</ul>
+<p><img src="/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/13.png"></p>
+<blockquote>
+<p>自定义委托类</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __K_SPINBOX_DELEGATE_</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __K_SPINBOX_DELEGATE_</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QStyledItemDelegate&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 默认委托</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">KSpinBoxDelegate</span> : <span class="keyword">public</span> QStyledItemDelegate</span><br><span class="line">&#123;</span><br><span class="line">	Q_OBJECT</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">KSpinBoxDelegate</span>(QObject *parent);</span><br><span class="line">	~<span class="built_in">KSpinBoxDelegate</span>();</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> QWidget* <span class="title">createEditor</span><span class="params">(QWidget* parent, </span></span></span><br><span class="line"><span class="params"><span class="function">		<span class="type">const</span> QStyleOptionViewItem&amp; option, <span class="type">const</span> QModelIndex&amp; index)</span> <span class="type">const</span> <span class="keyword">override</span></span>;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">setEditorData</span><span class="params">(QWidget* editor, <span class="type">const</span> QModelIndex&amp; index)</span> <span class="type">const</span> <span class="keyword">override</span></span>;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">setModelData</span><span class="params">(QWidget* editor, QAbstractItemModel* model,</span></span></span><br><span class="line"><span class="params"><span class="function">		<span class="type">const</span> QModelIndex&amp; index)</span> <span class="type">const</span> <span class="keyword">override</span></span>;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">updateEditorGeometry</span><span class="params">(QWidget* editor, <span class="type">const</span> QStyleOptionViewItem&amp; option,</span></span></span><br><span class="line"><span class="params"><span class="function">		<span class="type">const</span> QModelIndex&amp; index)</span> <span class="type">const</span> <span class="keyword">override</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;kspinboxdelegate.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QSpinBox&gt;</span></span></span><br><span class="line"></span><br><span class="line">KSpinBoxDelegate::<span class="built_in">KSpinBoxDelegate</span>(QObject *parent)</span><br><span class="line">	: <span class="built_in">QStyledItemDelegate</span>(parent)</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">KSpinBoxDelegate::~<span class="built_in">KSpinBoxDelegate</span>()</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回一个编辑控件,用来编辑指定项的数据</span></span><br><span class="line"><span class="function">QWidget* <span class="title">KSpinBoxDelegate::createEditor</span><span class="params">(QWidget* parent, <span class="type">const</span> QStyleOptionViewItem&amp; option, </span></span></span><br><span class="line"><span class="params"><span class="function">							<span class="type">const</span> QModelIndex&amp; index)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	QSpinBox* editor = <span class="keyword">new</span> <span class="built_in">QSpinBox</span>(parent);</span><br><span class="line"></span><br><span class="line">	editor-&gt;<span class="built_in">setMinimum</span>(<span class="number">0</span>);</span><br><span class="line">	editor-&gt;<span class="built_in">setMaximum</span>(<span class="number">100</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> editor; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将模型上的数据赋值到编辑控件上</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">KSpinBoxDelegate::setEditorData</span><span class="params">(QWidget* editor, <span class="type">const</span> QModelIndex&amp; index)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> value = index.<span class="built_in">model</span>()-&gt;<span class="built_in">data</span>(index, Qt::EditRole).<span class="built_in">toInt</span>();</span><br><span class="line">	</span><br><span class="line">	QSpinBox *spinbox = <span class="built_in">static_cast</span>&lt;QSpinBox*&gt;(editor);</span><br><span class="line">	spinbox-&gt;<span class="built_in">setValue</span>(value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 控件修改数据后，将数据同步到 model 中</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">KSpinBoxDelegate::setModelData</span><span class="params">(QWidget* editor, QAbstractItemModel* model, </span></span></span><br><span class="line"><span class="params"><span class="function">					<span class="type">const</span> QModelIndex&amp; index)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	QSpinBox *spinbox = <span class="built_in">static_cast</span>&lt;QSpinBox*&gt;(editor);</span><br><span class="line">	spinbox-&gt;<span class="built_in">interpretText</span>();</span><br><span class="line"></span><br><span class="line">	<span class="type">int</span> value = spinbox-&gt;<span class="built_in">value</span>();<span class="comment">// 从编辑控件上获取 value</span></span><br><span class="line">	</span><br><span class="line">	model-&gt;<span class="built_in">setData</span>(index, value, Qt::EditRole);<span class="comment">// 将数据保存到模型中</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 更新编辑框</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">KSpinBoxDelegate::updateEditorGeometry</span><span class="params">(QWidget* editor, </span></span></span><br><span class="line"><span class="params"><span class="function">				<span class="type">const</span> QStyleOptionViewItem&amp; option, <span class="type">const</span> QModelIndex&amp; index)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	editor-&gt;<span class="built_in">setGeometry</span>(option.rect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>主窗口</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __K_MAINWINDOW_H_</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __K_MAINWINDOW_H_</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QtWidgets/QWidget&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QStandardItemModel&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;ui_kmainwindow.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;kspinboxdelegate.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">KMainWindow</span> : <span class="keyword">public</span> QWidget</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">KMainWindow</span>(QWidget *parent = Q_NULLPTR);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">initTableviewCustomDelegate</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">initModelData</span><span class="params">()</span></span>;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Ui::KMainWindowClass ui;</span><br><span class="line">    QStandardItemModel *m_pModel;</span><br><span class="line">    KSpinBoxDelegate* m_pSpinBoxDelegate;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;kmainwindow.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">KMainWindow::<span class="built_in">KMainWindow</span>(QWidget *parent)</span><br><span class="line">    : <span class="built_in">QWidget</span>(parent)</span><br><span class="line">    , <span class="built_in">m_pModel</span>(<span class="literal">nullptr</span>)</span><br><span class="line">    , <span class="built_in">m_pSpinBoxDelegate</span>(<span class="literal">nullptr</span>)</span><br><span class="line">&#123;</span><br><span class="line">    ui.<span class="built_in">setupUi</span>(<span class="keyword">this</span>);</span><br><span class="line">    <span class="built_in">initTableviewCustomDelegate</span>();</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">KMainWindow::initTableviewCustomDelegate</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m_pModel = <span class="keyword">new</span> <span class="built_in">QStandardItemModel</span>(<span class="number">4</span>, <span class="number">2</span>, <span class="keyword">this</span>);</span><br><span class="line">    </span><br><span class="line">    ui.tableView-&gt;<span class="built_in">setModel</span>(m_pModel);</span><br><span class="line"></span><br><span class="line">    m_pSpinBoxDelegate = <span class="keyword">new</span> <span class="built_in">KSpinBoxDelegate</span>(<span class="keyword">this</span>);</span><br><span class="line">    </span><br><span class="line">    ui.tableView-&gt;<span class="built_in">setItemDelegate</span>(m_pSpinBoxDelegate);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">initModelData</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">KMainWindow::initModelData</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> row = <span class="number">0</span>; row &lt; <span class="number">4</span>; row++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> column = <span class="number">0</span>; column &lt; <span class="number">2</span>; column++)</span><br><span class="line">        &#123;</span><br><span class="line">            QModelIndex index = m_pModel-&gt;<span class="built_in">index</span>(row, column, <span class="built_in">QModelIndex</span>());</span><br><span class="line">            m_pModel-&gt;<span class="built_in">setData</span>(index, <span class="built_in">QVariant</span>((row + <span class="number">1</span>) * (column + <span class="number">1</span>)));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="9-Qt数据库模型"><a href="#9-Qt数据库模型" class="headerlink" title="9.Qt数据库模型"></a>9.Qt数据库模型</h3><ul>
+<li><p>在 Qt 中已经实现了相应的数据库框架 QSqlDataBase，可以支持多种不同的数据库</p>
+</li>
+<li><p>在使用 Qt 数据库框架时,基本步骤如下</p>
+<ul>
+<li>创建数据库连接，并添加到数据库连接列表中</li>
+<li>设置数据库表的名字</li>
+<li>打开数据库连接</li>
+</ul>
+</li>
+<li><p>使用数据库实现对学生信息的管理,基于 QSqlTableModel 来实现</p>
+</li>
+</ul>
+<p><img src="/2023/06/03/Qt-Model-View%E6%A1%86%E6%9E%B6/14.png"></p>
+<blockquote>
+<p>主窗口代码</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __K_MAINWINDOW_H_</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __K_MAINWINDOW_H_</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QtWidgets/QWidget&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QSqlTableModel&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QSqlDataBase&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;ui_kmainwindow.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">KMainWindow</span> : <span class="keyword">public</span> QWidget</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">KMainWindow</span>(QWidget *parent = Q_NULLPTR);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">initDataBase</span><span class="params">()</span></span>;<span class="comment">// 初始化数据库</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">initTableView</span><span class="params">()</span></span>; <span class="comment">// 初始化表格</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> slots:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">onAddRecord</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">onSerachRecord</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Ui::KMainWindowClass ui;</span><br><span class="line">    QSqlDatabase m_db; <span class="comment">// 数据库对象</span></span><br><span class="line">    QSqlTableModel* m_pSqlTabModel;<span class="comment">// 数据库表模型</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;kmainwindow.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QDebug&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QSqlError&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QSqlRecord&gt;</span></span></span><br><span class="line"></span><br><span class="line">KMainWindow::<span class="built_in">KMainWindow</span>(QWidget *parent)</span><br><span class="line">    : <span class="built_in">QWidget</span>(parent)</span><br><span class="line">    ,<span class="built_in">m_pSqlTabModel</span>(<span class="literal">nullptr</span>)</span><br><span class="line">&#123;</span><br><span class="line">    ui.<span class="built_in">setupUi</span>(<span class="keyword">this</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">initDataBase</span>();</span><br><span class="line">    <span class="built_in">initTableView</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">KMainWindow::initDataBase</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">bool</span> ok;</span><br><span class="line"></span><br><span class="line">    m_db = QSqlDatabase::<span class="built_in">addDatabase</span>(<span class="string">&quot;QSQLITE&quot;</span>);<span class="comment">// 创建数据库连接,并添加到数据库连接列表中</span></span><br><span class="line">    m_db.<span class="built_in">setDatabaseName</span>(<span class="string">&quot;student.db&quot;</span>);<span class="comment">// 设置数据库的名称</span></span><br><span class="line">    </span><br><span class="line">    ok = m_db.<span class="built_in">open</span>();<span class="comment">// 打开数据库连接</span></span><br><span class="line">    <span class="keyword">if</span> (!ok)</span><br><span class="line">        <span class="built_in">qDebug</span>() &lt;&lt; __FUNCTION__ &lt;&lt; m_db.<span class="built_in">lastError</span>().<span class="built_in">text</span>();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">KMainWindow::initTableView</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m_pSqlTabModel = <span class="keyword">new</span> <span class="built_in">QSqlTableModel</span>(<span class="keyword">this</span>);</span><br><span class="line">    m_pSqlTabModel-&gt;<span class="built_in">setTable</span>(<span class="string">&quot;students&quot;</span>); <span class="comment">//  设计模型关联的表为 students</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        QSqlTableModel::OnFieldChange:所有模型的变化都会立即同步到数据库</span></span><br><span class="line"><span class="comment">        QSqlTableModel::OnRowChange:当前行变化时同步到数据库</span></span><br><span class="line"><span class="comment">        QSqlTableModel::OnManualSubmit:所有的模型的变化需要手动方式更新到数据库，</span></span><br><span class="line"><span class="comment">            需要调用  submitAll() or revertAll()</span></span><br><span class="line"><span class="comment">    </span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line"></span><br><span class="line">    m_pSqlTabModel-&gt;<span class="built_in">setEditStrategy</span>(QSqlTableModel::OnManualSubmit);<span class="comment">// 设置为手动提交</span></span><br><span class="line">    </span><br><span class="line">    m_pSqlTabModel-&gt;<span class="built_in">select</span>();<span class="comment">// 查询所有行的数据，并显示到 tableview 中</span></span><br><span class="line"></span><br><span class="line">    m_pSqlTabModel-&gt;<span class="built_in">setHeaderData</span>(<span class="number">0</span>, Qt::Horizontal, <span class="built_in">QStringLiteral</span>(<span class="string">&quot;学号&quot;</span>));</span><br><span class="line">    m_pSqlTabModel-&gt;<span class="built_in">setHeaderData</span>(<span class="number">1</span>, Qt::Horizontal, <span class="built_in">QStringLiteral</span>(<span class="string">&quot;姓名&quot;</span>));</span><br><span class="line">    m_pSqlTabModel-&gt;<span class="built_in">setHeaderData</span>(<span class="number">2</span>, Qt::Horizontal, <span class="built_in">QStringLiteral</span>(<span class="string">&quot;年龄&quot;</span>));</span><br><span class="line">    m_pSqlTabModel-&gt;<span class="built_in">setHeaderData</span>(<span class="number">3</span>, Qt::Horizontal, <span class="built_in">QStringLiteral</span>(<span class="string">&quot;成绩&quot;</span>));</span><br><span class="line">    </span><br><span class="line">    ui.tableView-&gt;<span class="built_in">setModel</span>(m_pSqlTabModel);<span class="comment">// </span></span><br><span class="line"></span><br><span class="line">    (<span class="type">void</span>)<span class="built_in">connect</span>(ui.btnAdd,&amp;QPushButton::clicked,<span class="keyword">this</span>,&amp;KMainWindow::onAddRecord);</span><br><span class="line">    (<span class="type">void</span>)<span class="built_in">connect</span>(ui.btnSearch, &amp;QPushButton::clicked, <span class="keyword">this</span>, &amp;KMainWindow::onSerachRecord);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">KMainWindow::onSerachRecord</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    QString searchname = ui.lineEditSearch-&gt;<span class="built_in">text</span>();</span><br><span class="line">    m_pSqlTabModel-&gt;<span class="built_in">setFilter</span>(<span class="built_in">QString</span>(<span class="string">&quot;name=\&#x27;%1\&#x27;&quot;</span>).<span class="built_in">arg</span>(searchname));</span><br><span class="line">    m_pSqlTabModel-&gt;<span class="built_in">select</span>();<span class="comment">// 查询数据库，并将结果显示到 QTableView</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; m_pSqlTabModel-&gt;<span class="built_in">rowCount</span>(); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">qDebug</span>() &lt;&lt; <span class="string">&quot;name : &quot;</span> &lt;&lt; m_pSqlTabModel-&gt;<span class="built_in">record</span>(i).<span class="built_in">value</span>(<span class="string">&quot;name&quot;</span>).<span class="built_in">toString</span>();</span><br><span class="line">        <span class="built_in">qDebug</span>() &lt;&lt; <span class="string">&quot;age : &quot;</span> &lt;&lt; m_pSqlTabModel-&gt;<span class="built_in">record</span>(i).<span class="built_in">value</span>(<span class="string">&quot;age&quot;</span>).<span class="built_in">toInt</span>();</span><br><span class="line">        <span class="built_in">qDebug</span>() &lt;&lt; <span class="string">&quot;score : &quot;</span> &lt;&lt; m_pSqlTabModel-&gt;<span class="built_in">record</span>(i).<span class="built_in">value</span>(<span class="string">&quot;score&quot;</span>).<span class="built_in">toInt</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">KMainWindow::onAddRecord</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    QString sid = ui.lineEditId-&gt;<span class="built_in">text</span>();</span><br><span class="line">    QString sname = ui.lineEditName-&gt;<span class="built_in">text</span>();</span><br><span class="line">    QString sage = ui.lineEditAge-&gt;<span class="built_in">text</span>();</span><br><span class="line">    QString sscore = ui.lineEditScore-&gt;<span class="built_in">text</span>();</span><br><span class="line"></span><br><span class="line">    QSqlRecord record = m_pSqlTabModel-&gt;<span class="built_in">record</span>();<span class="comment">// 获取数据库表字段信息</span></span><br><span class="line"></span><br><span class="line">    record.<span class="built_in">setValue</span>(<span class="string">&quot;id&quot;</span>,sid);</span><br><span class="line">    record.<span class="built_in">setValue</span>(<span class="string">&quot;name&quot;</span>,sname);</span><br><span class="line">    record.<span class="built_in">setValue</span>(<span class="string">&quot;age&quot;</span>, sage);</span><br><span class="line">    record.<span class="built_in">setValue</span>(<span class="string">&quot;score&quot;</span>, sscore);</span><br><span class="line"></span><br><span class="line">    <span class="type">bool</span> ok;</span><br><span class="line"></span><br><span class="line">    ok = m_pSqlTabModel-&gt;<span class="built_in">insertRecord</span>(<span class="number">-1</span>, record);<span class="comment">//设置为 -1,表示插入 model 最后一列</span></span><br><span class="line">    <span class="keyword">if</span> (!ok)</span><br><span class="line">    &#123;</span><br><span class="line">       <span class="built_in">qDebug</span>() &lt;&lt; m_pSqlTabModel-&gt;<span class="built_in">lastError</span>().<span class="built_in">text</span>();</span><br><span class="line">       <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ok = m_pSqlTabModel-&gt;<span class="built_in">submitAll</span>();<span class="comment">// 提交到数据库，此时数据会更新</span></span><br><span class="line">    <span class="keyword">if</span> (!ok)</span><br><span class="line">    &#123;</span><br><span class="line">       <span class="built_in">qDebug</span>() &lt;&lt; __FUNCTION__ &lt;&lt; m_pSqlTabModel-&gt;<span class="built_in">lastError</span>().<span class="built_in">text</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Qt/" rel="tag"># Qt</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/06/02/C++%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="prev" title="C++多线程">
+      <i class="fa fa-chevron-left"></i> C++多线程
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-MVC%E6%A1%86%E6%9E%B6"><span class="nav-number">1.</span> <span class="nav-text">1.MVC框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Qt-Model-x2F-View%E6%A1%86%E6%9E%B6"><span class="nav-number">2.</span> <span class="nav-text">2.Qt Model&#x2F;View框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%A7%86%E5%9B%BE%E7%BB%84%E4%BB%B6%EF%BC%88View%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">3.视图组件（View）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%A8%A1%E5%9E%8B%EF%BC%88Model%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">4.模型（Model）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%A8%A1%E5%9E%8B%E7%B4%A2%E5%BC%95%EF%BC%88QModelIndex%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">5.模型索引（QModelIndex）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%A0%87%E5%87%86%E6%95%B0%E6%8D%AE%E9%A1%B9%E6%A8%A1%E5%9E%8B"><span class="nav-number">6.</span> <span class="nav-text">6.标准数据项模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E8%87%AA%E5%AE%9A%E4%B9%89Model"><span class="nav-number">7.</span> <span class="nav-text">7.自定义Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-Qt-%E8%87%AA%E5%AE%9A%E4%B9%89Delegate"><span class="nav-number">8.</span> <span class="nav-text">8.Qt 自定义Delegate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-Qt%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A8%A1%E5%9E%8B"><span class="nav-number">9.</span> <span class="nav-text">9.Qt数据库模型</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">WanDai</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Daichief" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Daichief" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/2415709268@qq.com" title="E-Mail → 2415709268@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WanDai</span>
+</div>
+
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
